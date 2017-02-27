@@ -12,7 +12,7 @@ class LineBotClient < Line::Bot::Client
         when Line::Bot::Event::MessageType::Text
           keyphrase =
             YahooKeyphraseService.new(event.message['text']).execute.try(:first).try(:fetch, 'Keyphrase') ||
-            YahooMAService.new(event.message['text']).execute.select{|word| word["pos"] == "形容詞" || word["pos"] == "感動詞" || word["pos"] == "副詞"}.first.try(:fetch, 'surface') unless keyphrase
+            YahooMAService.new(event.message['text']).execute.select{|word| word["pos"] == "形容詞" || word["pos"] == "感動詞" || word["pos"] == "副詞"}.first.try(:fetch, 'surface')
           text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
           text.insert(0, "つまり") if event.message['text'].length > 26
           message   = {
