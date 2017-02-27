@@ -11,5 +11,6 @@ class YahooKeyphraseService
     response    = http_client.post(endpoint_uri, body: query)
     results     = Hash.from_xml(response.body)['ResultSet']['Result']
     results     = [results] if results.instance_of?(Hash)
+    results
   end
 end
