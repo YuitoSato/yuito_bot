@@ -10,9 +10,11 @@ class LineBotClient < Line::Bot::Client
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          message = {
+          keyphrase = YahooKeyphraseService.new(event.message['text']).execute.try(:first).try(:fetch, 'Keyphrase')
+          text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
+          message   = {
             type: 'text',
-            text: event.message['text'] + 'っすね'
+            text: text
           }
           reply_message(event['replyToken'], message)
         end
