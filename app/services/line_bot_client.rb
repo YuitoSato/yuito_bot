@@ -12,6 +12,7 @@ class LineBotClient < Line::Bot::Client
         when Line::Bot::Event::MessageType::Text
           keyphrase = YahooKeyphraseService.new(event.message['text']).execute.try(:first).try(:fetch, 'Keyphrase')
           text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
+          text.insert(0, "つまり") if event.message['text'].length > 26
           message   = {
             type: 'text',
             text: text
