@@ -17,7 +17,7 @@ class LineBotClient < Line::Bot::Client
           when 'モードオフ'
             user.talk!
           when 'ググって'
-            user.search
+            user.search!
           else
             message = case user.mode
             when 'talk'

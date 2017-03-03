@@ -8,13 +8,11 @@ module Line
 
     def execute
       res = GoogleCustomSearchApi.search(text)
-        .items
-        .try(:first)
+        .items.try(:first)
 
       image = res.pagemap
-        .cse_thumbnail
-        .try(:first)
-        .try(:fetch, 'src') if res['cse_thumbnail']
+        .cse_thumbnail.try(:first)
+        .try(:fetch, 'src') if res.pagemap['cse_thumbnail']
 
       {
         'type': 'template',
