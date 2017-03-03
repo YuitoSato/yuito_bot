@@ -6,7 +6,6 @@ module Line
       @text = text
     end
 
-
     def execute
       keyphrase =
         YahooKeyphraseService.new(text).execute.try(:first).try(:fetch, 'Keyphrase') ||
