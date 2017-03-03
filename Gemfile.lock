@@ -38,6 +38,8 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.0)
+      public_suffix (~> 2.0, >= 2.0.2)
     arel (7.1.4)
     builder (3.2.3)
     byebug (9.0.6)
@@ -73,6 +75,11 @@ GEM
     ffi (1.9.17)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    google_custom_search_api (2.0.0)
+      addressable
+      httparty
+    httparty (0.14.0)
+      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (0.8.0)
     jbuilder (2.6.1)
@@ -97,6 +104,7 @@ GEM
     mini_portile2 (2.1.0)
     minitest (5.10.1)
     multi_json (1.12.1)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     mysql2 (0.4.5)
     nio4r (1.2.1)
@@ -108,6 +116,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
+    public_suffix (2.0.5)
     puma (3.7.0)
     rack (2.0.1)
     rack-test (0.6.3)
@@ -188,6 +197,7 @@ DEPENDENCIES
   config
   dotenv-rails
   feedjira
+  google_custom_search_api
   httpclient
   jbuilder (~> 2.5)
   jquery-rails
