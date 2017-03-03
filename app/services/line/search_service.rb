@@ -7,9 +7,16 @@ module Line
     end
 
     def execute
-      res = GoogleCustomSearchApi.search(text).items.try(:first)
-      image = res.pagemap.cse_thumbnail.try(:first).try(:fetch, 'src') if res['cse_thumbnail']
-      message = {
+      res = GoogleCustomSearchApi.search(text)
+        .items
+        .try(:first)
+
+      image = res.pagemap
+        .cse_thumbnail
+        .try(:first)
+        .try(:fetch, 'src') if res['cse_thumbnail']
+
+      {
         "type": "template",
         "altText": "this is a buttons template",
         "template": {
