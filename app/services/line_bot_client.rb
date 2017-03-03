@@ -6,6 +6,7 @@ class LineBotClient < Line::Bot::Client
 
   def response(body)
     parse_events_from(body).each do |event|
+      user = User.where(line_id: event['source']['userId']).first_or_create
       case event
       when Line::Bot::Event::Message
         case event.type
