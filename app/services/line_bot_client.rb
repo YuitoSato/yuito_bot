@@ -12,12 +12,21 @@ class LineBotClient < Line::Bot::Client
         case event.type
         when Line::Bot::Event::MessageType::Text
           text = event.message['text']
-          message = case user.mode
-          when 'talk'
-            Line::TalkService.new(text).execute
-          when 'search'
-            Line::SearchService.new(text).execute
+
+          case text
+          when 'モードオフ'
+            user.talk!
+          when 'ググって'
+            user.search
+          else
+            message = case user.mode
+            when 'talk'
+              Line::TalkService.new(text).execute
+            when 'search'
+              Line::SearchService.new(text).execute
+            end
           end
+
           response = reply_message(event['replyToken'], message)
 
           if response.instance_of?(Net::HTTPBadRequest)
