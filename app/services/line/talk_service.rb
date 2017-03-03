@@ -20,7 +20,7 @@ module Line
           .first
           .try(:fetch, 'surface')
 
-      text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
+      text = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
       text.insert(0, 'つまり') if text.length > 26
 
       {
