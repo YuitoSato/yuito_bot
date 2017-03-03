@@ -15,12 +15,36 @@ class LineBotClient < Line::Bot::Client
           #   YahooMAService.new(event.message['text']).execute.select{|word| word["pos"] == "形容詞" || word["pos"] == "感動詞" || word["pos"] == "副詞"}.first.try(:fetch, 'surface')
           # text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
           # text.insert(0, "つまり") if event.message['text'].length > 26
-          text = GoogleCustomSearchApi.search(event.message['text']).items.try(:first).try(:link)
-          message   = {
-            type: 'text',
-            text: text
+          res = GoogleCustomSearchApi.search(event.message['text']).items.try(:first)
+          image = res.pagemap.cse_thumbnail.try(:first).try(:fetch, 'src') if res['cse_thumbnail']
+          # text = res.try(:fetch, 'title') + '\\n' + res.try(:fetch, 'link')
+          message = {
+            "type": "template",
+            "altText": "this is a buttons template",
+            "template": {
+                "type": "buttons",
+                "thumbnailImageUrl": image,
+                "title": res.title,
+                "text": res.snippet[0, 60],
+                "actions": [
+                    {
+                      "type": "uri",
+                      "label": "Click here",
+                      "uri": res.link
+                    }
+                ]
+            }
           }
-          reply_message(event['replyToken'], message)
+
+          response = reply_message(event['replyToken'], message)
+          if response.instance_of?(Net::HTTPBadRequest)
+            binding.pry
+            message = {
+              type: 'text',
+              text: 'エラーしたよ'
+            }
+            reply_message(event['replyToken'], message)
+          end
         end
       end
     end
