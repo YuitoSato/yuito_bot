@@ -17,18 +17,18 @@ module Line
         .try(:fetch, 'src') if res['cse_thumbnail']
 
       {
-        "type": "template",
-        "altText": "this is a buttons template",
-        "template": {
-            "type": "buttons",
-            "thumbnailImageUrl": image,
-            "title": res.title,
-            "text": res.snippet[0, 60],
-            "actions": [
+        'type': 'template',
+        'altText': 'this is a buttons template',
+        'template': {
+            'type': 'buttons',
+            'thumbnailImageUrl': image,
+            'title': res.title,
+            'text': res.snippet[0, 60],
+            'actions': [
                 {
-                  "type": "uri",
-                  "label": "Click here",
-                  "uri": res.link
+                  'type': 'uri',
+                  'label': 'Click here',
+                  'uri': res.link
                 }
             ]
         }
