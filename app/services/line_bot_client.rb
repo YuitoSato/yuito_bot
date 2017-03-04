@@ -6,20 +6,36 @@ class LineBotClient < Line::Bot::Client
 
   def response(body)
     parse_events_from(body).each do |event|
+      user = User.where(line_id: event['source']['userId']).first_or_create
       case event
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          keyphrase =
-            YahooKeyphraseService.new(event.message['text']).execute.try(:first).try(:fetch, 'Keyphrase') ||
-            YahooMAService.new(event.message['text']).execute.select{|word| word["pos"] == "形容詞" || word["pos"] == "感動詞" || word["pos"] == "副詞"}.first.try(:fetch, 'surface')
-          text      = keyphrase ? keyphrase + 'っすね' : 'ちょっと何言ってるか分からないっすw'
-          text.insert(0, "つまり") if event.message['text'].length > 26
-          message   = {
-            type: 'text',
-            text: text
-          }
-          reply_message(event['replyToken'], message)
+          text = event.message['text']
+
+          case text
+          when 'モードオフ'
+            user.talk!
+          when 'ググって'
+            user.search!
+          else
+            message = case user.mode
+            when 'talk'
+              Line::TalkService.new(text).execute
+            when 'search'
+              Line::SearchService.new(text).execute
+            end
+          end
+
+          response = reply_message(event['replyToken'], message)
+
+          if response.instance_of?(Net::HTTPBadRequest)
+            message = {
+              type: 'text',
+              text: 'エラーしたよ'
+            }
+            push_message(user.line_id, message)
+          end
         end
       end
     end
