@@ -7,7 +7,7 @@ class LineBotClient < Line::Bot::Client
   def response(body)
     parse_events_from(body).each do |event|
       line_id = event['source']['userId'] || event['source']['groupId']
-      user = User.where(line_id: line_id).first_or_create
+      user    = User.where(line_id: line_id).first_or_create
       case event
       when Line::Bot::Event::Message
         case event.type
@@ -28,16 +28,12 @@ class LineBotClient < Line::Bot::Client
             end
           end
 
-          response = reply_message(event['replyToken'], message)
-
-          if response.instance_of?(Net::HTTPBadRequest)
-            message = {
-              type: 'text',
-              text: 'エラーしたよ'
-            }
-            push_message(user.line_id, message)
-          end
+        when Line::Bot::Event::MessageType::Image
+          response = get_message_content(event.message['id'])
+          message  = Line::ImageService.new(response.body).execute
         end
+
+        reply_message(event['replyToken'], message)
       end
     end
   end
