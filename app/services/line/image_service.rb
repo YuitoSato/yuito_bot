@@ -13,7 +13,7 @@ module Line
           .try(:fetch, 'labelAnnotations')
           .try(:first)
           .try(:fetch, 'description')
-      text = description ? "多分、、#{description}っすかね。" : 'ちょっと何かわからないっすw'
+      text = description ? "多分ですけど、、#{description}っすかね..." : 'ちょっと何かわからないっすw'
       {
         type: 'text',
         text: text
